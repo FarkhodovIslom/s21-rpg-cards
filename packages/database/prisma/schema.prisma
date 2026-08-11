@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Participant {
+  login           String   @id
+  className       String
+  parallelName    String
+  expValue        Int
+  level           Int
+  expToNextLevel  Int
+  campusId        String
+  status          String
+  logtime         Float?
+
+  skills          Skill[]
+  badges          Badge[]
+  points          Points?
+  feedback        Feedback?
+  expHistory      ExpEntry[]
+}
+
+model Skill {
+  id                String  @id @default(cuid())
+  name              String
+  value             Int
+  participantLogin  String
+  participant       Participant @relation(fields: [participantLogin], references: [login])
+}
+
+model Badge {
+  id                String   @id @default(cuid())
+  name              String
+  receiptDate       DateTime
+  participantLogin  String
+  participant       Participant @relation(fields: [participantLogin], references: [login])
+}
+
+model Points {
+  participantLogin  String @id
+  prp               Int
+  crp               Int
+  coins             Int
+  participant       Participant @relation(fields: [participantLogin], references: [login])
+}
+
+model Feedback {
+  participantLogin  String @id
+  punctuality       Float
+  interest          Float
+  thoroughness      Float
+  friendliness      Float
+  participant       Participant @relation(fields: [participantLogin], references: [login])
+}
+
+model ExpEntry {
+  id                String   @id @default(cuid())
+  amount            Int
+  date              DateTime
+  participantLogin  String
+  participant       Participant @relation(fields: [participantLogin], references: [login])
+}
