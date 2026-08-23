@@ -7,9 +7,6 @@ build/
 out/
 .next/
 
-# turbo
-.turbo/
-
 # logs
 logs/
 *.log
@@ -39,3 +36,6 @@ coverage/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+postgres-data
+/generated/prisma

@@ -5,10 +5,10 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -r run build",
+    "db:generate": "pnpm --filter database exec prisma generate",
+    "db:migrate": "pnpm --filter database exec prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
