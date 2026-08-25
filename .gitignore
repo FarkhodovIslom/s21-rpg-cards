@@ -36,6 +36,7 @@ coverage/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+AGENTS.md
 
 postgres-data
 /generated/prisma
