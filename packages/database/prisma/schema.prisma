@@ -12,6 +12,14 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id                    String   @id @default(cuid())
+  login                 String   @unique
+  encryptedRefreshToken String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
 model Participant {
   login           String   @id
   className       String
