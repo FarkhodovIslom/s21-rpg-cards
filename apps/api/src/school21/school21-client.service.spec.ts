@@ -69,7 +69,7 @@ describe('School21ClientService', () => {
   });
 
   it('should unwrap skills from the response body', async () => {
-    const skills = [{ name: 'Algorithms', value: 42 }];
+    const skills = [{ name: 'Algorithms', points: 42 }];
     jest
       .spyOn(httpService, 'get')
       .mockReturnValue(of({ data: { skills } } as any));
@@ -84,7 +84,13 @@ describe('School21ClientService', () => {
   });
 
   it('should unwrap badges from the response body', async () => {
-    const badges = [{ name: 'First peer review', receiptDate: '2026-01-01' }];
+    const badges = [
+      {
+        name: 'First peer review',
+        receiptDateTime: '2026-01-01',
+        iconUrl: 'https://example.com/first-peer-review.png',
+      },
+    ];
     jest
       .spyOn(httpService, 'get')
       .mockReturnValue(of({ data: { badges } } as any));

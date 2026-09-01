@@ -161,7 +161,7 @@ export class SyncService implements OnModuleInit {
           await tx.skill.createMany({
             data: skills.map((s) => ({
               name: s.name,
-              value: s.value,
+              value: s.points,
               participantLogin: participant.login,
             })),
           });
@@ -174,7 +174,8 @@ export class SyncService implements OnModuleInit {
           await tx.badge.createMany({
             data: badges.map((b) => ({
               name: b.name,
-              receiptDate: new Date(b.receiptDate),
+              receiptDate: new Date(b.receiptDateTime),
+              iconUrl: b.iconUrl,
               participantLogin: participant.login,
             })),
           });

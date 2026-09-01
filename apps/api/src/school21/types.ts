@@ -13,15 +13,17 @@ export interface SchoolParticipant {
   status: string;
 }
 
-// TODO(CP2-verify): skill item field names
+// Verified against the live API: skill items carry `points`.
 export interface SchoolSkill {
   name: string;
-  value: number;
+  points: number;
 }
 
+// Verified against the live API.
 export interface SchoolBadge {
   name: string;
-  receiptDate: string;
+  receiptDateTime: string;
+  iconUrl: string;
 }
 
 // TODO(CP2-verify): field casing

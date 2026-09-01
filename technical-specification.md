@@ -52,8 +52,8 @@ The frontend and School21 never see each other directly. The school password is 
 | Endpoint | Response shape | Purpose |
 |---|---|---|
 | `GET /participants/{login}` | object: login, className, parallelName, expValue, level, expToNextLevel, campus, status | core profile |
-| `GET /participants/{login}/skills` | `{ skills: [...] }` array | skill values (40+ categories) |
-| `GET /participants/{login}/badges` | `{ badges: [...] }` array (name, receiptDate) | achievements |
+| `GET /participants/{login}/skills` | `{ skills: [...] }` array | skill values: name + points (40+ categories) |
+| `GET /participants/{login}/badges` | `{ badges: [...] }` array (name, receiptDateTime, iconUrl) | achievements |
 | `GET /participants/{login}/points` | flat object (3 fields: PRP, CRP, Coins) | points |
 | `GET /participants/{login}/feedback` | flat object (4 fields: punctuality, interest, thoroughness, friendliness) | peer feedback |
 | `GET /participants/{login}/logtime` | **raw float scalar**, not an object | weekly log time |

@@ -53,6 +53,7 @@ model Badge {
   id                String   @id @default(cuid())
   name              String
   receiptDate       DateTime
+  iconUrl           String?
   participantLogin  String
   participant       Participant @relation(fields: [participantLogin], references: [login])
 }

@@ -63,9 +63,13 @@ describe('SyncService', () => {
     status: 'STUDENT',
   };
 
-  const skillsFixture = [{ name: 'Algorithms', value: 42 }];
+  const skillsFixture = [{ name: 'Algorithms', points: 42 }];
   const badgesFixture = [
-    { name: 'Warrior', receiptDate: '2024-05-01T00:00:00.000Z' },
+    {
+      name: 'Warrior',
+      receiptDateTime: '2024-05-01T00:00:00.000Z',
+      iconUrl: 'https://example.com/warrior.png',
+    },
   ];
   const pointsFixture = { PRP: 10, CRP: 20, Coins: 30 };
   const feedbackFixture = {
@@ -174,6 +178,7 @@ describe('SyncService', () => {
         {
           name: 'Warrior',
           receiptDate: new Date('2024-05-01T00:00:00.000Z'),
+          iconUrl: 'https://example.com/warrior.png',
           participantLogin: 'testuser',
         },
       ],
