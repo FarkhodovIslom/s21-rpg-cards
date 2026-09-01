@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { of } from 'rxjs';
+import { UnauthorizedException } from '@nestjs/common';
+import { of, Observable } from 'rxjs';
 import { AuthService } from './auth.service.js';
 import { PrismaService } from '../common/prisma.service.js';
 import { decrypt, encrypt } from '../common/crypto.js';
@@ -125,9 +126,30 @@ describe('AuthService', () => {
   it('should throw if Keycloak config is missing', async () => {
     jest.spyOn(configService, 'get').mockReturnValue(undefined);
 
-    await expect(
-      service.login('testuser', 'testpass'),
-    ).rejects.toThrow('Missing Keycloak or encryption configuration');
+    await expect(service.login('testuser', 'testpass')).rejects.toThrow(
+      'Missing Keycloak or encryption configuration',
+    );
+  });
+
+  it('should throw UnauthorizedException without leaking request body on Keycloak 401', async () => {
+    const axiosError = new Error('Request failed with status code 401');
+    (axiosError as any).config = {
+      data: 'grant_type=password&username=testuser&password=testpass',
+    };
+    jest
+      .spyOn(httpService, 'post')
+      .mockReturnValue(
+        new Observable((subscriber) => subscriber.error(axiosError)),
+      );
+
+    try {
+      await service.login('testuser', 'testpass');
+      fail('Expected UnauthorizedException');
+    } catch (err) {
+      expect(err).toBeInstanceOf(UnauthorizedException);
+      expect(JSON.stringify(err)).not.toContain('testpass');
+      expect(JSON.stringify(err)).not.toContain('grant_type');
+    }
   });
 
   it('should not store password on service instance', async () => {
@@ -157,11 +179,14 @@ describe('AuthService', () => {
 
       const newRefreshToken = 'new-refresh-token-value';
       const newAccessToken = 'new-access-token-value';
-      jest
-        .spyOn(httpService, 'post')
-        .mockReturnValue(
-          of({ data: { access_token: newAccessToken, refresh_token: newRefreshToken } } as any),
-        );
+      jest.spyOn(httpService, 'post').mockReturnValue(
+        of({
+          data: {
+            access_token: newAccessToken,
+            refresh_token: newRefreshToken,
+          },
+        } as any),
+      );
 
       const result = await service.refreshUserToken('user-123');
 
@@ -180,7 +205,8 @@ describe('AuthService', () => {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         },
       );
-      const calledBody = (httpService.post as jest.Mock).mock.calls[0][1] as string;
+      const calledBody = (httpService.post as jest.Mock).mock
+        .calls[0][1] as string;
       const params = new URLSearchParams(calledBody);
       expect(params.get('grant_type')).toBe('refresh_token');
       expect(params.get('client_id')).toBe('s21-open-api');
@@ -194,7 +220,10 @@ describe('AuthService', () => {
         },
       });
       const updateCall = mockPrisma.user.update.mock.calls[0][0];
-      const decryptedNew = decrypt(updateCall.data.encryptedRefreshToken, mockEncryptionKey);
+      const decryptedNew = decrypt(
+        updateCall.data.encryptedRefreshToken,
+        mockEncryptionKey,
+      );
       expect(decryptedNew).toBe(newRefreshToken);
 
       // Verify only access_token is returned (no refresh_token leak)

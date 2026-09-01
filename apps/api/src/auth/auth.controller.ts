@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
-import { Response } from 'express';
+import type { Response } from 'express';
 import { AuthService } from './auth.service.js';
 import { createHmac } from 'crypto';
 import { ConfigService } from '@nestjs/config';
@@ -16,10 +16,7 @@ export class AuthController {
     @Body() body: { login: string; password: string },
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ success: true }> {
-    const { userId } = await this.authService.login(
-      body.login,
-      body.password,
-    );
+    const { userId } = await this.authService.login(body.login, body.password);
 
     const secret = this.configService.get<string>('TOKEN_ENCRYPTION_KEY');
     const signature = createHmac('sha256', secret!)

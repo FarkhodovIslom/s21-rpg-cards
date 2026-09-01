@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -13,10 +13,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async login(
-    username: string,
-    password: string,
-  ): Promise<{ userId: string }> {
+  async login(username: string, password: string): Promise<{ userId: string }> {
     const keycloakUrl = this.configService.get<string>('KEYCLOAK_URL');
     const realm = this.configService.get<string>('KEYCLOAK_REALM');
     const clientId = this.configService.get<string>('KEYCLOAK_CLIENT_ID');
@@ -38,11 +35,23 @@ export class AuthService {
       password,
     });
 
-    const { data } = await firstValueFrom(
-      this.httpService.post(url, body.toString(), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      }),
-    );
+    let data: {
+      access_token: string;
+      refresh_token: string;
+    };
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post<{
+          access_token: string;
+          refresh_token: string;
+        }>(url, body.toString(), {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }),
+      );
+      data = response.data;
+    } catch {
+      throw new UnauthorizedException('Invalid login or password');
+    }
 
     const { refresh_token } = data;
 
@@ -87,11 +96,23 @@ export class AuthService {
       refresh_token: refreshToken,
     });
 
-    const { data } = await firstValueFrom(
-      this.httpService.post(url, body.toString(), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      }),
-    );
+    let data: {
+      access_token: string;
+      refresh_token: string;
+    };
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post<{
+          access_token: string;
+          refresh_token: string;
+        }>(url, body.toString(), {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }),
+      );
+      data = response.data;
+    } catch {
+      throw new UnauthorizedException('Session expired');
+    }
 
     const newEncryptedRefreshToken = encrypt(data.refresh_token, encryptionKey);
 
