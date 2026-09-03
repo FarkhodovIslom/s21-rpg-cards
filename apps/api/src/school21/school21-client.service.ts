@@ -114,26 +114,44 @@ export class School21ClientService {
   }
 
   async getCampuses(accessToken: string): Promise<SchoolCampus[]> {
-    return this.request<SchoolCampus[]>('/campuses', accessToken);
+    const response = await this.request<{ campuses: SchoolCampus[] }>(
+      '/campuses',
+      accessToken,
+    );
+    return response.campuses;
   }
 
   async getCampusCoalitions(
     campusId: string,
     accessToken: string,
   ): Promise<SchoolCoalition[]> {
-    return this.request<SchoolCoalition[]>(
+    const response = await this.request<{ coalitions: SchoolCoalition[] }>(
       `/campuses/${campusId}/coalitions`,
       accessToken,
     );
+    return response.coalitions;
+  }
+
+  // Browse endpoints return logins only, not full participant objects.
+  async getCampusParticipants(
+    campusId: string,
+    accessToken: string,
+  ): Promise<string[]> {
+    const response = await this.request<{ participants: string[] }>(
+      `/campuses/${campusId}/participants`,
+      accessToken,
+    );
+    return response.participants;
   }
 
   async getCoalitionParticipants(
     coalitionId: string,
     accessToken: string,
-  ): Promise<SchoolParticipant[]> {
-    return this.request<SchoolParticipant[]>(
+  ): Promise<string[]> {
+    const response = await this.request<{ participants: string[] }>(
       `/coalitions/${coalitionId}/participants`,
       accessToken,
     );
+    return response.participants;
   }
 }

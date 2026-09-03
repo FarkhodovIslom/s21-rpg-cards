@@ -1,0 +1,14 @@
+.state { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at 50% -10%, #332617, var(--bg-deep) 50%); }
+.skeleton, .empty { width: min(100%, 560px); padding: 42px; border: 1px solid var(--border-ornate); background: var(--bg-panel); color: var(--text-muted); text-align: center; }
+.skeleton span { color: var(--accent-gold); font-family: var(--font-display, system-ui, sans-serif); animation: pulse 1.4s ease-in-out infinite; }
+.shimmer { height: 12px; margin-top: 22px; background: linear-gradient(90deg, var(--bg-inset) 25%, #2a2216 50%, var(--bg-inset) 75%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+.shimmerShort { width: 62%; }
+.empty h1 { margin: 12px 0; color: var(--text-primary); font-size: clamp(26px, 6vw, 42px); }
+.empty p:not(.kicker) { line-height: 1.6; }
+.kicker { color: var(--accent-gold); font-size: 11px; font-weight: 700; letter-spacing: .15em; font-family: var(--font-display, system-ui, sans-serif); }
+.detail { margin-top: 10px; color: var(--text-faint); font-size: 12px; }
+.retry { margin-top: 24px; padding: 12px 20px; background: var(--accent-gold); color: var(--bg-deep); font-weight: 700; text-transform: uppercase; transition: filter .15s ease; }
+.retry:hover { filter: brightness(1.12); }
+.back { display: inline-block; margin-top: 22px; color: var(--accent-gold); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-family: var(--font-display, system-ui, sans-serif); }
+@keyframes pulse { 50% { opacity: .35; } }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }

@@ -1,17 +1,99 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark-fantasy palette — CP6 visual pass tunes these variables only. */
+  --bg-deep: #0c0a08;
+  --bg-panel: #16120d;
+  --bg-panel-raised: #1d1811;
+  --bg-inset: #0f0c08;
+  --border-ornate: #3a2f1f;
+  --border-ornate-strong: #57452a;
+  --text-primary: #e9e1d2;
+  --text-muted: #8d8069;
+  --text-faint: #5f5646;
+  --accent-gold: #dcae3c;
+  --accent-ember: #c25b3a;
+  --danger: #d24a43;
+  --xp-track: #241c12;
+
+  /* Level-tier frame tokens — overridden per tier class below. */
+  --tier-primary: #9c7a44;
+  --tier-secondary: #3d2e14;
+  --tier-glow: rgba(156, 122, 68, 0.35);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/*
+ * Level tiers (S21 RPG design system). Driven by the real School21 `level`
+ * field (capped at 21); past 21 XP accumulates as prestige stars.
+ */
+.tier-1 {
+  --tier-primary: #9c7a44;
+  --tier-secondary: #3d2e14;
+  --tier-glow: rgba(156, 122, 68, 0.35);
+}
+
+.tier-2 {
+  --tier-primary: #b9c3cc;
+  --tier-secondary: #464e56;
+  --tier-glow: rgba(185, 195, 204, 0.35);
+}
+
+.tier-3 {
+  --tier-primary: #dcae3c;
+  --tier-secondary: #5c430e;
+  --tier-glow: rgba(220, 174, 60, 0.45);
+}
+
+.tier-4 {
+  --tier-primary: #57cfe6;
+  --tier-secondary: #164a58;
+  --tier-glow: rgba(87, 207, 230, 0.5);
+}
+
+.tier-5 {
+  --tier-primary: #e8465f;
+  --tier-secondary: #5a0f1e;
+  --tier-glow: rgba(232, 70, 95, 0.6);
+}
+
+/*
+ * Structural signature: angled cut corners, never border-radius, on every
+ * bordered card/panel/badge container (S21 RPG design system).
+ */
+.clip-outer {
+  clip-path: polygon(
+    22px 0,
+    100% 0,
+    100% calc(100% - 22px),
+    calc(100% - 22px) 100%,
+    0 100%,
+    0 22px
+  );
+}
+
+.clip-inner {
+  clip-path: polygon(
+    20px 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%,
+    0 20px
+  );
+}
+
+.clip-small {
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
 }
 
 html {
   height: 100%;
+  color-scheme: dark;
 }
 
 html,
@@ -24,9 +106,9 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-deep);
+  font-family: var(--font-body, system-ui, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -42,8 +124,30 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/*
+ * Typography (S21 RPG design system): Chakra Petch for display, numbers,
+ * and labels; Manrope for body text.
+ */
+h1,
+h2,
+h3,
+h4,
+strong,
+button,
+dt,
+time {
+  font-family: var(--font-display, system-ui, sans-serif);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
 }

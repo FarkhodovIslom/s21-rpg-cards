@@ -52,7 +52,7 @@ describe('School21ClientService', () => {
       expValue: 1000,
       level: 3,
       expToNextLevel: 500,
-      campus: 'moscow',
+      campus: { id: 'moscow', shortName: '21 Moscow' },
       status: 'active',
     };
     jest
@@ -105,7 +105,7 @@ describe('School21ClientService', () => {
   });
 
   it('should unwrap expHistory from the response body', async () => {
-    const expHistory = [{ amount: 10, date: '2026-01-01' }];
+    const expHistory = [{ expValue: 10, accrualDateTime: '2026-01-01' }];
     jest
       .spyOn(httpService, 'get')
       .mockReturnValue(of({ data: { expHistory } } as any));
@@ -174,10 +174,10 @@ describe('School21ClientService', () => {
   });
 
   it('should fetch campuses', async () => {
-    const campuses = [{ id: '1', name: 'Moscow' }];
+    const campuses = [{ id: '1', shortName: 'msk', fullName: 'Moscow' }];
     jest
       .spyOn(httpService, 'get')
-      .mockReturnValue(of({ data: campuses } as any));
+      .mockReturnValue(of({ data: { campuses } } as any));
 
     const result = await service.getCampuses('tok');
 
@@ -188,10 +188,10 @@ describe('School21ClientService', () => {
   });
 
   it('should fetch coalitions of a campus', async () => {
-    const coalitions = [{ id: '2', name: 'Sirius' }];
+    const coalitions = [{ coalitionId: 2, name: 'Sirius' }];
     jest
       .spyOn(httpService, 'get')
-      .mockReturnValue(of({ data: coalitions } as any));
+      .mockReturnValue(of({ data: { coalitions } } as any));
 
     const result = await service.getCampusCoalitions('1', 'tok');
 
@@ -202,22 +202,25 @@ describe('School21ClientService', () => {
     expect(result).toEqual(coalitions);
   });
 
-  it('should fetch participants of a coalition', async () => {
-    const participants = [
-      {
-        login: 'bar',
-        className: 'class-1',
-        parallelName: 'parallel-1',
-        expValue: 100,
-        level: 2,
-        expToNextLevel: 50,
-        campus: 'moscow',
-        status: 'active',
-      },
-    ];
+  it('should fetch participants of a campus', async () => {
     jest
       .spyOn(httpService, 'get')
-      .mockReturnValue(of({ data: participants } as any));
+      .mockReturnValue(of({ data: { participants: ['a'] } } as any));
+
+    const result = await service.getCampusParticipants('1', 'tok');
+
+    expect(httpService.get).toHaveBeenCalledWith(
+      'https://api.test/campuses/1/participants',
+      { headers: { Authorization: 'Bearer tok' } },
+    );
+    expect(result).toEqual(['a']);
+  });
+
+  it('should fetch participants of a coalition', async () => {
+    const participants = ['bar', 'baz'];
+    jest
+      .spyOn(httpService, 'get')
+      .mockReturnValue(of({ data: { participants } } as any));
 
     const result = await service.getCoalitionParticipants('2', 'tok');
 

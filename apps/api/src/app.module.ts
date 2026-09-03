@@ -5,6 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { SyncModule } from './sync/sync.module.js';
+import { CardModule } from './card/card.module.js';
+import { ParticipantsModule } from './participants/participants.module.js';
+import { BrowseModule } from './browse/browse.module.js';
 
 @Module({
   imports: [
@@ -12,6 +15,9 @@ import { SyncModule } from './sync/sync.module.js';
     ScheduleModule.forRoot(),
     AuthModule,
     SyncModule,
+    CardModule,
+    ParticipantsModule,
+    BrowseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

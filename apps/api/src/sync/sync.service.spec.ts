@@ -59,7 +59,7 @@ describe('SyncService', () => {
     expValue: 1000,
     level: 5,
     expToNextLevel: 500,
-    campus: 'campus-1',
+    campus: { id: 'campus-1', shortName: '21 Campus' },
     status: 'STUDENT',
   };
 
@@ -71,15 +71,21 @@ describe('SyncService', () => {
       iconUrl: 'https://example.com/warrior.png',
     },
   ];
-  const pointsFixture = { PRP: 10, CRP: 20, Coins: 30 };
+  const pointsFixture = {
+    peerReviewPoints: 10,
+    codeReviewPoints: 20,
+    coins: 30,
+  };
   const feedbackFixture = {
-    punctuality: 4.5,
-    interest: 4,
-    thoroughness: 3.5,
-    friendliness: 5,
+    averageVerifierPunctuality: 4.5,
+    averageVerifierInterest: 4,
+    averageVerifierThoroughness: 3.5,
+    averageVerifierFriendliness: 5,
   };
   const logtimeFixture = 12.5;
-  const expHistoryFixture = [{ amount: 50, date: '2024-05-01T10:00:00.000Z' }];
+  const expHistoryFixture = [
+    { expValue: 50, accrualDateTime: '2024-05-01T10:00:00.000Z' },
+  ];
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -285,10 +291,10 @@ describe('SyncService', () => {
     expect(results[1]).toEqual({ login: 'otheruser', status: 'synced' });
   });
 
-  it('normalizes campus object to campusId', async () => {
+  it('writes the campusId from the participant response campus object', async () => {
     school21Mock.getParticipant.mockResolvedValue({
       ...participantFixture,
-      campus: { id: '42', name: 'Moscow' },
+      campus: { id: '42', shortName: '21 Somewhere' },
     });
 
     await service.syncUser({ id: 'u1', login: 'testuser' });

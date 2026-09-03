@@ -8,9 +8,15 @@ export interface SchoolParticipant {
   expValue: number;
   level: number;
   expToNextLevel: number;
-  // TODO(CP2-verify): campus may arrive as an id string or an object
-  campus: string | { id: string; name?: string };
+  // Verified against the live API + OpenAPI ParticipantV1DTO: campus is an
+  // object (ParticipantCampusV1DTO), not a bare id string.
+  campus: SchoolParticipantCampus;
   status: string;
+}
+
+export interface SchoolParticipantCampus {
+  id: string;
+  shortName: string;
 }
 
 // Verified against the live API: skill items carry `points`.
@@ -26,34 +32,38 @@ export interface SchoolBadge {
   iconUrl: string;
 }
 
-// TODO(CP2-verify): field casing
+// Verified against the live API + OpenAPI ParticipantPointsV1DTO.
 export interface SchoolPoints {
-  PRP: number;
-  CRP: number;
-  Coins: number;
+  peerReviewPoints: number;
+  codeReviewPoints: number;
+  coins: number;
 }
 
+// Verified against the live API + OpenAPI ParticipantFeedbackV1DTO.
+// All fields are nullable: a user with no peer-reviews returns null for all.
 export interface SchoolFeedback {
-  punctuality: number;
-  interest: number;
-  thoroughness: number;
-  friendliness: number;
+  averageVerifierPunctuality: number | null;
+  averageVerifierInterest: number | null;
+  averageVerifierThoroughness: number | null;
+  averageVerifierFriendliness: number | null;
 }
 
-// TODO(CP2-verify): field names
+// Verified against the live API + OpenAPI ParticipantXpHistoryItemV1DTO.
 export interface SchoolExpHistoryEntry {
-  amount: number;
-  date: string;
+  expValue: number;
+  accrualDateTime: string;
 }
 
-// TODO(CP2-verify): full shape
+// Verified against the OpenAPI spec: GET /campuses returns { campuses: [...] }.
 export interface SchoolCampus {
   id: string;
-  name: string;
+  shortName: string;
+  fullName: string;
 }
 
-// TODO(CP2-verify): full shape
+// Verified against the OpenAPI spec: GET /campuses/{id}/coalitions returns
+// { coalitions: [...] } and the id field is `coalitionId`, not `id`.
 export interface SchoolCoalition {
-  id: string;
+  coalitionId: number;
   name: string;
 }

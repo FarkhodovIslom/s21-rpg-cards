@@ -127,10 +127,7 @@ export class SyncService implements OnModuleInit {
         accessToken,
       );
 
-      const campusId =
-        typeof participant.campus === 'string'
-          ? participant.campus
-          : participant.campus.id;
+      const campusId = participant.campus.id;
       const now = new Date();
 
       // 4. Single transaction - the DB mirrors the API (delete + recreate
@@ -187,8 +184,8 @@ export class SyncService implements OnModuleInit {
         if (expHistory.length > 0) {
           await tx.expEntry.createMany({
             data: expHistory.map((e) => ({
-              amount: e.amount,
-              date: new Date(e.date),
+              amount: e.expValue,
+              date: new Date(e.accrualDateTime),
               participantLogin: participant.login,
             })),
           });
@@ -198,27 +195,31 @@ export class SyncService implements OnModuleInit {
           where: { participantLogin: participant.login },
           create: {
             participantLogin: participant.login,
-            prp: points.PRP,
-            crp: points.CRP,
-            coins: points.Coins,
+            prp: points.peerReviewPoints,
+            crp: points.codeReviewPoints,
+            coins: points.coins,
           },
-          update: { prp: points.PRP, crp: points.CRP, coins: points.Coins },
+          update: {
+            prp: points.peerReviewPoints,
+            crp: points.codeReviewPoints,
+            coins: points.coins,
+          },
         });
 
         await tx.feedback.upsert({
           where: { participantLogin: participant.login },
           create: {
             participantLogin: participant.login,
-            punctuality: feedback.punctuality,
-            interest: feedback.interest,
-            thoroughness: feedback.thoroughness,
-            friendliness: feedback.friendliness,
+            punctuality: feedback.averageVerifierPunctuality,
+            interest: feedback.averageVerifierInterest,
+            thoroughness: feedback.averageVerifierThoroughness,
+            friendliness: feedback.averageVerifierFriendliness,
           },
           update: {
-            punctuality: feedback.punctuality,
-            interest: feedback.interest,
-            thoroughness: feedback.thoroughness,
-            friendliness: feedback.friendliness,
+            punctuality: feedback.averageVerifierPunctuality,
+            interest: feedback.averageVerifierInterest,
+            thoroughness: feedback.averageVerifierThoroughness,
+            friendliness: feedback.averageVerifierFriendliness,
           },
         });
       });

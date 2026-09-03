@@ -1,0 +1,25 @@
+.kicker { color: var(--accent-gold); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-family: var(--font-display, system-ui, sans-serif); }
+.heading { display: flex; justify-content: space-between; align-items: end; padding-bottom: 18px; border-bottom: 1px solid var(--border-ornate); }
+.heading h1 { margin-top: 8px; font-size: clamp(28px, 5vw, 40px); letter-spacing: -.02em; }
+.heading span { color: var(--text-muted); font-size: 12px; white-space: nowrap; }
+.breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; color: var(--text-muted); font-size: 12px; font-family: var(--font-display, system-ui, sans-serif); }
+.breadcrumbs a { color: var(--text-muted); font-weight: 700; letter-spacing: .04em; }
+.breadcrumbs a:hover { color: var(--accent-gold); }
+.breadcrumbs .current { color: var(--accent-gold); font-weight: 700; }
+.breadcrumbs .sep { color: var(--text-faint); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-top: 26px; }
+.tile { display: grid; gap: 6px; padding: 18px; border: 1px solid var(--border-ornate); background: var(--bg-panel-raised); transition: border-color .15s ease, transform .15s ease; }
+.tile:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+.tile .name { color: var(--text-primary); font-size: 16px; font-weight: 700; overflow-wrap: anywhere; font-family: var(--font-display, system-ui, sans-serif); }
+.tile .sub { color: var(--text-muted); font-size: 12px; overflow-wrap: anywhere; }
+.state { min-height: 60vh; display: grid; place-items: center; }
+.stateBox { width: min(100%, 520px); padding: 36px; border: 1px solid var(--border-ornate); background: var(--bg-panel); color: var(--text-muted); text-align: center; }
+.stateBox h1 { margin: 10px 0; color: var(--text-primary); font-size: clamp(22px, 5vw, 34px); }
+.stateBox p { line-height: 1.6; }
+.stateBox span { color: var(--accent-gold); animation: pulse 1.4s ease-in-out infinite; font-family: var(--font-display, system-ui, sans-serif); }
+.detail { margin-top: 10px; color: var(--text-faint); font-size: 12px; }
+.retry { margin-top: 22px; padding: 12px 20px; background: var(--accent-gold); color: var(--bg-deep); font-weight: 700; text-transform: uppercase; transition: filter .15s ease; }
+.retry:hover { filter: brightness(1.12); }
+.backLink { display: inline-block; margin-top: 18px; color: var(--accent-gold); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-family: var(--font-display, system-ui, sans-serif); }
+@keyframes pulse { 50% { opacity: .35; } }
+.page { max-width: 1180px; margin: 0 auto; padding: clamp(20px, 4vw, 48px); }

@@ -67,11 +67,11 @@ model Points {
 }
 
 model Feedback {
-  participantLogin  String @id
-  punctuality       Float
-  interest          Float
-  thoroughness      Float
-  friendliness      Float
+  participantLogin  String  @id
+  punctuality       Float?
+  interest          Float?
+  thoroughness      Float?
+  friendliness      Float?
   participant       Participant @relation(fields: [participantLogin], references: [login])
 }
 
